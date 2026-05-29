@@ -2648,13 +2648,16 @@ public abstract class PolarisRestCatalogIntegrationBase extends CatalogTests<RES
   public void testLoadTableWithMissingMetadataFile(@TempDir Path tempDir) {}
 
   @Test
-  @Disabled("Feature is not implemented yet")
-  @Override
-  public void createTableInUniqueLocation() {}
-
-  @Test
   @Disabled(
       "Test is not compatible with Polaris: rename-table op does not change the table location")
   @Override
   public void dropAfterRenameDoesntCorruptTable() {}
+
+  @Test
+  @Disabled(
+      "unique-table-location is honored server-side, but the REST integration harness cannot yet"
+          + " set it as a per-test server catalog property; covered by the unit-level conformance"
+          + " test")
+  @Override
+  public void createTableInUniqueLocation() {}
 }

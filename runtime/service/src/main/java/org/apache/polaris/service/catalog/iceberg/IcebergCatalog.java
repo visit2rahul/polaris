@@ -364,9 +364,15 @@ public class IcebergCatalog extends BaseMetastoreViewCatalog
 
   @Override
   protected String defaultWarehouseLocation(TableIdentifier tableIdentifier) {
+    String tableLocationName =
+        LocationUtil.tableLocation(
+            tableIdentifier,
+            PropertyUtil.propertyAsBoolean(
+                properties(),
+                CatalogProperties.UNIQUE_TABLE_LOCATION,
+                CatalogProperties.UNIQUE_TABLE_LOCATION_DEFAULT));
     if (tableIdentifier.namespace().isEmpty()) {
-      return SLASH.join(
-          defaultNamespaceLocation(tableIdentifier.namespace()), tableIdentifier.name());
+      return SLASH.join(defaultNamespaceLocation(tableIdentifier.namespace()), tableLocationName);
     } else {
       PolarisResolvedPathWrapper resolvedNamespace =
           resolvedEntityView.getResolvedPath(
@@ -376,7 +382,7 @@ public class IcebergCatalog extends BaseMetastoreViewCatalog
       }
       List<PolarisEntity> namespacePath = resolvedNamespace.getRawFullPath();
       String namespaceLocation = resolveLocationForPath(diagnostics, namespacePath);
-      return SLASH.join(namespaceLocation, tableIdentifier.name());
+      return SLASH.join(namespaceLocation, tableLocationName);
     }
   }
 
